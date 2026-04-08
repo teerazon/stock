@@ -9,14 +9,21 @@
   <meta name="theme-color" content="#ffffff">
   <title>StockMate – จัดการสต๊อก</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Tailwind for utility classes -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    /**
+     * สำหรับ Vercel Deployment:
+     * ให้คุณนำค่าจาก Supabase Dashboard (Settings > API) มาใส่ที่นี่
+     * หรือหากต้องการความปลอดภัยสูงสุด ให้ใช้กระบวนการ Build Step 
+     * แต่สำหรับ Static Site แบบง่าย สามารถกำหนดค่าไว้ตรงนี้ได้ครับ
+     */
+    window.ENV_SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"; // แทนที่ด้วย Project URL ของคุณ
+    window.ENV_SUPABASE_ANON_KEY = "YOUR_ANON_PUBLIC_KEY"; // แทนที่ด้วย Anon Public Key ของคุณ
+  </script>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!--  TOP APP BAR                                               -->
-<!-- ═══════════════════════════════════════════════════════════ -->
 <header class="app-bar">
   <div class="app-bar-title">
     <span class="app-icon">📦</span>
@@ -28,15 +35,9 @@
   </div>
 </header>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!--  MAIN CONTENT PAGES                                        -->
-<!-- ═══════════════════════════════════════════════════════════ -->
 <main class="main-content">
 
-  <!-- ── PAGE: INVENTORY ─────────────────────────────────── -->
   <div id="page-inventory" class="page active">
-
-    <!-- Stats Row -->
     <div class="stats-row">
       <div class="stat-card">
         <div class="stat-number" id="stat-total" style="color: var(--accent)">–</div>
@@ -52,14 +53,12 @@
       </div>
     </div>
 
-    <!-- Search -->
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
       <input type="text" id="search-input" class="search-input"
         placeholder="ค้นหาสินค้า หรือบาร์โค้ด..." autocomplete="off">
     </div>
 
-    <!-- Product Grid -->
     <div class="inventory-grid" id="inventory-grid">
       <div class="empty-state" style="grid-column:1/-1">
         <span class="empty-icon">⏳</span>
@@ -68,16 +67,13 @@
     </div>
   </div>
 
-  <!-- ── PAGE: SCANNER ───────────────────────────────────── -->
   <div id="page-scanner" class="page">
     <div class="section-header">
       <span class="section-title">สแกนบาร์โค้ด</span>
     </div>
-
     <div class="scanner-container">
       <div id="reader"></div>
     </div>
-
     <div class="scan-controls">
       <button id="btn-start-scan" class="btn-primary" style="flex:1">
         📷 เริ่มสแกน
@@ -86,13 +82,10 @@
         ⏹ หยุดสแกน
       </button>
     </div>
-
     <div class="scan-status" id="scan-status">
       <div class="scan-status-icon">📲</div>
       <p class="scan-status-text">กดปุ่ม "เริ่มสแกน" แล้วส่องกล้องไปที่บาร์โค้ดสินค้า</p>
     </div>
-
-    <!-- Manual Barcode Entry -->
     <div class="add-custom-section" style="margin-top:16px;">
       <p class="add-custom-title">🔢 กรอกบาร์โค้ดด้วยตนเอง</p>
       <div class="add-custom-row">
@@ -103,13 +96,10 @@
     </div>
   </div>
 
-  <!-- ── PAGE: SHOPPING LIST ─────────────────────────────── -->
   <div id="page-shopping" class="page">
     <div class="section-header">
       <span class="section-title">รายการสั่งซื้อ</span>
     </div>
-
-    <!-- Export Bar -->
     <div class="export-bar" id="export-bar" style="display:none">
       <div class="export-info">
         <strong id="export-count">0</strong> รายการรอซื้อ
@@ -118,8 +108,6 @@
         🖼️ บันทึก PNG
       </button>
     </div>
-
-    <!-- Custom Item Add -->
     <div class="add-custom-section">
       <p class="add-custom-title">➕ เพิ่มรายการเอง</p>
       <div class="add-custom-row">
@@ -130,36 +118,28 @@
         <button class="btn-add-custom" id="btn-add-custom">เพิ่ม</button>
       </div>
     </div>
-
-    <!-- List Items -->
     <div id="shopping-list-container">
       <div class="empty-state">
         <span class="empty-icon">🛒</span>
         <p>รายการซื้อว่างเปล่า</p>
-        <p class="sub">เพิ่มสินค้าจากคลังหรือกรอกรายการเอง</p>
       </div>
     </div>
-
-    <!-- Clear All -->
-    <div style="margin-top:12px; text-align:center;" id="clear-all-wrap" style="display:none">
+    <div style="margin-top:12px; text-align:center; display:none;" id="clear-all-wrap">
       <button class="btn-secondary" id="btn-clear-all" style="width:100%;color:var(--danger);border-color:var(--danger)">
         🗑️ ล้างรายการทั้งหมด
       </button>
     </div>
   </div>
 
-  <!-- ── PAGE: HISTORY ───────────────────────────────────── -->
   <div id="page-history" class="page">
     <div class="section-header">
       <span class="section-title">ประวัติการซื้อ</span>
     </div>
-
     <div class="history-tabs">
       <button class="history-tab active" data-filter="all">ทั้งหมด</button>
       <button class="history-tab" data-filter="purchased">ซื้อแล้ว ✅</button>
       <button class="history-tab" data-filter="cancelled">ยกเลิก ❌</button>
     </div>
-
     <div id="history-container">
       <div class="empty-state">
         <span class="empty-icon">📋</span>
@@ -167,12 +147,8 @@
       </div>
     </div>
   </div>
-
 </main>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!--  BOTTOM NAVIGATION                                         -->
-<!-- ═══════════════════════════════════════════════════════════ -->
 <nav class="bottom-nav">
   <button class="nav-item active" data-page="inventory">
     <span class="nav-icon">📦</span>
@@ -192,65 +168,40 @@
   </button>
 </nav>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!--  MODALS                                                    -->
-<!-- ═══════════════════════════════════════════════════════════ -->
-
-<!-- Scanner Quick Update Modal -->
 <div class="modal-overlay" id="quick-update-modal"></div>
 
-<!-- Add / Edit Product Modal -->
 <div class="modal-overlay" id="product-modal">
   <div class="modal-backdrop" onclick="window.closeProductModal()"></div>
   <div class="modal-card">
     <button class="modal-close" onclick="window.closeProductModal()">✕</button>
     <h2 class="modal-title" id="modal-title">เพิ่มสินค้า</h2>
-
     <input type="hidden" id="modal-product-id">
-
-    <!-- Image Upload -->
     <div class="form-group">
       <label class="form-label">รูปภาพสินค้า</label>
       <div class="form-image-preview" id="image-preview" onclick="document.getElementById('image-file').click()">
-        <div class="img-upload-hint">
-          <span>🖼️</span>
-          แตะเพื่อเลือกรูปภาพ
-        </div>
+        <div class="img-upload-hint"><span>🖼️</span>แตะเพื่อเลือกรูปภาพ</div>
       </div>
       <input type="file" id="image-file" accept="image/*" style="display:none">
     </div>
-
-    <!-- Product Name -->
     <div class="form-group">
       <label class="form-label">ชื่อสินค้า *</label>
       <input type="text" id="modal-name" class="form-input" placeholder="เช่น น้ำดื่ม 600ml">
     </div>
-
-    <!-- Barcode -->
     <div class="form-group">
       <label class="form-label">บาร์โค้ด</label>
-      <input type="text" id="modal-barcode" class="form-input"
-        placeholder="เช่น 8850006100012" inputmode="numeric">
+      <input type="text" id="modal-barcode" class="form-input" placeholder="เช่น 8850006100012" inputmode="numeric">
     </div>
-
-    <!-- Quantity + Unit -->
     <div class="form-group">
       <label class="form-label">จำนวนในสต๊อก</label>
       <div class="form-row">
-        <input type="number" id="modal-qty" class="form-input half"
-          placeholder="0" min="0">
-        <input type="text" id="modal-unit" class="form-input half"
-          placeholder="หน่วย (pcs, kg, ขวด...)">
+        <input type="number" id="modal-qty" class="form-input half" placeholder="0" min="0">
+        <input type="text" id="modal-unit" class="form-input half" placeholder="หน่วย (ขวด, ชิ้น...)">
       </div>
     </div>
-
-    <!-- Min Stock -->
     <div class="form-group">
       <label class="form-label">แจ้งเตือนเมื่อต่ำกว่า</label>
-      <input type="number" id="modal-min-stock" class="form-input"
-        placeholder="5" min="0">
+      <input type="number" id="modal-min-stock" class="form-input" placeholder="5" min="0">
     </div>
-
     <div class="modal-footer">
       <button class="btn-secondary" onclick="window.closeProductModal()">ยกเลิก</button>
       <button class="btn-primary" style="flex:2" id="btn-save-product">💾 บันทึก</button>
@@ -258,7 +209,6 @@
   </div>
 </div>
 
-<!-- Confirm Delete Modal -->
 <div class="modal-overlay" id="confirm-modal">
   <div class="modal-backdrop" onclick="window.closeConfirm()"></div>
   <div class="modal-card confirm-dialog">
@@ -272,18 +222,12 @@
   </div>
 </div>
 
-<!-- Toast Container -->
 <div id="toast-container"></div>
-
-<!-- Loading Overlay -->
 <div class="loading-overlay" id="loading">
   <div class="spinner"></div>
   <p class="loading-text" id="loading-text">กำลังโหลด...</p>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!--  APP SCRIPTS                                               -->
-<!-- ═══════════════════════════════════════════════════════════ -->
 <script type="module">
   import { supabase, testConnection } from './supabase-client.js';
   import {
@@ -291,21 +235,21 @@
     createProduct, updateProduct, deleteProduct,
     adjustQuantity, renderInventory
   } from './inventory.js';
-  import { initScanner, startScan, stopScan, handleScannedBarcode, isScanning } from './scanner.js';
+  import { initScanner, startScan, stopScan, handleScannedBarcode } from './scanner.js';
   import {
     fetchShoppingList, fetchHistory,
     addToList, addCustomItem, markPurchased, removeFromList,
     clearAllPending, renderShoppingList, renderHistory, exportAsPNG
   } from './shopping-list.js';
 
-  // ── State ────────────────────────────────────────────────
+  // State
   let currentPage = 'inventory';
   let allInventory = [];
   let shoppingItems = [];
   let historyFilter = 'all';
   let searchDebounce = null;
 
-  // ── Toast System ─────────────────────────────────────────
+  // Toast System
   window.showToast = function(message, type = 'info', duration = 3000) {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
@@ -318,7 +262,6 @@
     }, duration);
   };
 
-  // ── Loading ──────────────────────────────────────────────
   function showLoading(text = 'กำลังโหลด...') {
     document.getElementById('loading').classList.add('visible');
     document.getElementById('loading-text').textContent = text;
@@ -327,27 +270,19 @@
     document.getElementById('loading').classList.remove('visible');
   }
 
-  // ── Navigation ───────────────────────────────────────────
+  // Navigation
   document.querySelectorAll('.nav-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const page = btn.dataset.page;
-      navigateTo(page);
-    });
+    btn.addEventListener('click', () => navigateTo(btn.dataset.page));
   });
 
   function navigateTo(page) {
     if (currentPage === 'scanner') stopScan().catch(() => {});
-
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-
     document.getElementById(`page-${page}`).classList.add('active');
     document.querySelector(`[data-page="${page}"]`).classList.add('active');
-
-    const titles = {
-      inventory: 'คลังสินค้า', scanner: 'สแกนบาร์โค้ด',
-      shopping: 'รายการสั่งซื้อ', history: 'ประวัติการซื้อ'
-    };
+    
+    const titles = { inventory: 'คลังสินค้า', scanner: 'สแกนบาร์โค้ด', shopping: 'รายการสั่งซื้อ', history: 'ประวัติการซื้อ' };
     document.getElementById('page-title').textContent = titles[page] || page;
     currentPage = page;
 
@@ -356,7 +291,6 @@
     if (page === 'history') loadHistory();
   }
 
-  // ── Load Inventory ───────────────────────────────────────
   async function loadInventory(search = '') {
     try {
       allInventory = await fetchInventory(search);
@@ -373,9 +307,7 @@
     document.getElementById('stat-out').textContent = items.filter(i => i.quantity === 0).length;
   }
 
-  window.refreshInventory = () => loadInventory(document.getElementById('search-input').value);
-
-  // Search
+  // Event Listeners for Inventory
   document.getElementById('search-input').addEventListener('input', (e) => {
     clearTimeout(searchDebounce);
     searchDebounce = setTimeout(() => loadInventory(e.target.value), 400);
@@ -386,7 +318,6 @@
     showToast('🔄 รีเฟรชแล้ว', 'info', 1500);
   });
 
-  // ── Quick +/- Adjust ─────────────────────────────────────
   window.quickAdjust = async (id, delta) => {
     try {
       await adjustQuantity(id, delta);
@@ -396,17 +327,15 @@
     }
   };
 
-  // ── Product Modal ────────────────────────────────────────
+  // Product Modal Logic
   let selectedImageFile = null;
-
   document.getElementById('image-file').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
     selectedImageFile = file;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      document.getElementById('image-preview').innerHTML =
-        `<img src="${ev.target.result}" alt="preview">`;
+      document.getElementById('image-preview').innerHTML = `<img src="${ev.target.result}" alt="preview">`;
     };
     reader.readAsDataURL(file);
   });
@@ -418,310 +347,100 @@
     document.getElementById('modal-name').value = product?.name || '';
     document.getElementById('modal-barcode').value = product?.barcode || '';
     document.getElementById('modal-qty').value = product?.quantity ?? '';
-    document.getElementById('modal-unit').value = product?.unit || 'pcs';
+    document.getElementById('modal-unit').value = product?.unit || 'ขวด';
     document.getElementById('modal-min-stock').value = product?.min_stock ?? 5;
-
     const preview = document.getElementById('image-preview');
-    if (product?.image_url) {
-      preview.innerHTML = `<img src="${product.image_url}" alt="preview">`;
-    } else {
-      preview.innerHTML = `<div class="img-upload-hint"><span>🖼️</span>แตะเพื่อเลือกรูปภาพ</div>`;
-    }
-
+    preview.innerHTML = product?.image_url ? `<img src="${product.image_url}" alt="">` : `<div class="img-upload-hint"><span>🖼️</span>แตะเพื่อเลือกรูปภาพ</div>`;
     document.getElementById('product-modal').classList.add('visible');
-    setTimeout(() => document.getElementById('modal-name').focus(), 300);
   }
 
   window.openEditModal = async (id) => {
-    showLoading('กำลังโหลดข้อมูลสินค้า...');
+    showLoading();
     try {
       const product = await fetchById(id);
       openProductModal(product);
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    } finally {
-      hideLoading();
-    }
+    } catch (err) { showToast(`❌ ${err.message}`, 'error'); }
+    finally { hideLoading(); }
   };
 
-  window.closeProductModal = () => {
-    document.getElementById('product-modal').classList.remove('visible');
-    selectedImageFile = null;
-  };
+  window.closeProductModal = () => document.getElementById('product-modal').classList.remove('visible');
 
-  // FAB opens add modal
-  const fab = document.createElement('button');
-  fab.className = 'fab';
-  fab.innerHTML = '＋';
-  fab.title = 'เพิ่มสินค้า';
-  fab.addEventListener('click', () => openProductModal());
-  document.body.appendChild(fab);
-
-  // Save product
   document.getElementById('btn-save-product').addEventListener('click', async () => {
     const id = document.getElementById('modal-product-id').value;
     const name = document.getElementById('modal-name').value.trim();
-
     if (!name) { showToast('กรุณากรอกชื่อสินค้า', 'warning'); return; }
-
+    
     const productData = {
       name,
       barcode: document.getElementById('modal-barcode').value.trim() || null,
-      quantity: document.getElementById('modal-qty').value,
-      unit: document.getElementById('modal-unit').value || 'pcs',
+      quantity: document.getElementById('modal-qty').value || 0,
+      unit: document.getElementById('modal-unit').value || 'ขวด',
       min_stock: document.getElementById('modal-min-stock').value || 5,
     };
 
-    showLoading(id ? 'กำลังบันทึก...' : 'กำลังเพิ่มสินค้า...');
+    showLoading();
     try {
-      if (id) {
-        await updateProduct(id, productData, selectedImageFile);
-        showToast(`✅ อัปเดต "${name}" สำเร็จ`, 'success');
-      } else {
-        await createProduct(productData, selectedImageFile);
-        showToast(`✅ เพิ่ม "${name}" สำเร็จ`, 'success');
-      }
+      if (id) await updateProduct(id, productData, selectedImageFile);
+      else await createProduct(productData, selectedImageFile);
+      showToast('✅ บันทึกสำเร็จ', 'success');
       window.closeProductModal();
-      await loadInventory();
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    } finally {
-      hideLoading();
-    }
+      loadInventory();
+    } catch (err) { showToast(`❌ ${err.message}`, 'error'); }
+    finally { hideLoading(); }
   });
 
-  // ── Delete ───────────────────────────────────────────────
-  let pendingDeleteId = null;
+  // FAB
+  const fab = document.createElement('button');
+  fab.className = 'fab';
+  fab.innerHTML = '＋';
+  fab.onclick = () => openProductModal();
+  document.body.appendChild(fab);
 
-  window.confirmDelete = (id, name) => {
-    pendingDeleteId = id;
-    document.getElementById('confirm-message').textContent = `ลบ "${name}" ออกจากคลัง?`;
-    document.getElementById('confirm-modal').classList.add('visible');
-  };
-
-  window.closeConfirm = () => {
-    document.getElementById('confirm-modal').classList.remove('visible');
-    pendingDeleteId = null;
-  };
-
-  document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
-    if (!pendingDeleteId) return;
-    showLoading('กำลังลบ...');
-    try {
-      await deleteProduct(pendingDeleteId);
-      showToast('🗑️ ลบสำเร็จ', 'success');
-      window.closeConfirm();
-      await loadInventory();
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    } finally {
-      hideLoading();
-    }
-  });
-
-  // ── Scanner ──────────────────────────────────────────────
+  // Scanner initialization
   initScanner('reader', async (barcode) => {
-    updateScanStatus(`🔍 สแกนได้: ${barcode}`, '✅');
     await handleScannedBarcode(barcode, window.showToast);
   });
 
-  document.getElementById('btn-start-scan').addEventListener('click', async () => {
+  document.getElementById('btn-start-scan').onclick = async () => {
     try {
       await startScan('reader');
       document.getElementById('btn-start-scan').style.display = 'none';
       document.getElementById('btn-stop-scan').style.display = 'flex';
-      updateScanStatus('กำลังสแกน... ส่องกล้องไปที่บาร์โค้ด', '🟢');
-    } catch (err) {
-      showToast('❌ ไม่สามารถเปิดกล้องได้ กรุณาอนุญาตการเข้าถึงกล้อง', 'error');
-    }
-  });
+    } catch (err) { showToast('❌ เปิดกล้องไม่ได้', 'error'); }
+  };
 
-  document.getElementById('btn-stop-scan').addEventListener('click', async () => {
+  document.getElementById('btn-stop-scan').onclick = async () => {
     await stopScan();
     document.getElementById('btn-start-scan').style.display = 'flex';
     document.getElementById('btn-stop-scan').style.display = 'none';
-    updateScanStatus('หยุดสแกนแล้ว กดปุ่มเพื่อเริ่มใหม่', '⏹');
-  });
-
-  document.getElementById('btn-scan-quick').addEventListener('click', () => navigateTo('scanner'));
-
-  document.getElementById('btn-manual-search').addEventListener('click', async () => {
-    const barcode = document.getElementById('manual-barcode').value.trim();
-    if (!barcode) { showToast('กรุณากรอกบาร์โค้ด', 'warning'); return; }
-    await handleScannedBarcode(barcode, window.showToast);
-  });
-
-  document.getElementById('manual-barcode').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') document.getElementById('btn-manual-search').click();
-  });
-
-  window.closeQuickModal = () => {
-    document.getElementById('quick-update-modal').classList.remove('visible');
-    document.getElementById('quick-update-modal').innerHTML = '';
-    if (currentPage === 'scanner') {
-      // Resume scanning after modal close
-      setTimeout(() => {
-        const modal = document.getElementById('quick-update-modal');
-        if (!modal.classList.contains('visible')) {
-          // scanner is still active
-        }
-      }, 300);
-    }
   };
 
-  function updateScanStatus(text, icon) {
-    document.getElementById('scan-status').innerHTML = `
-      <div class="scan-status-icon">${icon}</div>
-      <p class="scan-status-text">${text}</p>`;
-  }
-
-  // ── Shopping List ────────────────────────────────────────
+  // Shopping & History load
   async function loadShoppingList() {
     try {
       shoppingItems = await fetchShoppingList();
       renderShoppingList(shoppingItems, document.getElementById('shopping-list-container'));
-      updateExportBar(shoppingItems.length);
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    }
+      document.getElementById('export-bar').style.display = shoppingItems.length ? 'flex' : 'none';
+      document.getElementById('clear-all-wrap').style.display = shoppingItems.length ? 'block' : 'none';
+      document.getElementById('export-count').textContent = shoppingItems.length;
+    } catch (err) { showToast(`❌ ${err.message}`, 'error'); }
   }
 
-  function updateExportBar(count) {
-    const bar = document.getElementById('export-bar');
-    const clearWrap = document.getElementById('clear-all-wrap');
-    if (count > 0) {
-      bar.style.display = 'flex';
-      clearWrap.style.display = 'block';
-      document.getElementById('export-count').textContent = count;
-    } else {
-      bar.style.display = 'none';
-      clearWrap.style.display = 'none';
-    }
-  }
-
-  window.addToShoppingList = async (id) => {
-    try {
-      await addToList(id);
-      showToast('✅ เพิ่มในรายการสั่งซื้อแล้ว', 'success');
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    }
-  };
-
-  window.checkItem = async (id) => {
-    try {
-      await markPurchased(id);
-      await loadShoppingList();
-      showToast('✅ ซื้อแล้ว!', 'success');
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    }
-  };
-
-  window.removeItem = async (id) => {
-    try {
-      await removeFromList(id);
-      await loadShoppingList();
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    }
-  };
-
-  document.getElementById('btn-add-custom').addEventListener('click', async () => {
-    const name = document.getElementById('custom-item-name').value.trim();
-    const qty = parseInt(document.getElementById('custom-item-qty').value) || 1;
-    if (!name) { showToast('กรุณากรอกชื่อสินค้า', 'warning'); return; }
-
-    try {
-      await addCustomItem(name, qty);
-      document.getElementById('custom-item-name').value = '';
-      document.getElementById('custom-item-qty').value = '1';
-      await loadShoppingList();
-      showToast(`✅ เพิ่ม "${name}" แล้ว`, 'success');
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    }
-  });
-
-  document.getElementById('custom-item-name').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') document.getElementById('btn-add-custom').click();
-  });
-
-  document.getElementById('btn-export-png').addEventListener('click', async () => {
-    if (shoppingItems.length === 0) { showToast('ไม่มีรายการ', 'warning'); return; }
-    showLoading('กำลังสร้างรูปภาพ...');
-    try {
-      await exportAsPNG(shoppingItems);
-      showToast('🖼️ บันทึกรูปภาพสำเร็จ', 'success');
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    } finally {
-      hideLoading();
-    }
-  });
-
-  document.getElementById('btn-clear-all').addEventListener('click', async () => {
-    if (!confirm('ล้างรายการทั้งหมด?')) return;
-    try {
-      await clearAllPending();
-      await loadShoppingList();
-      showToast('🗑️ ล้างรายการแล้ว', 'info');
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    }
-  });
-
-  // ── History ──────────────────────────────────────────────
   async function loadHistory() {
     try {
-      let items = await fetchHistory(100);
-      if (historyFilter !== 'all') {
-        items = items.filter(i => i.status === historyFilter);
-      }
+      let items = await fetchHistory();
+      if (historyFilter !== 'all') items = items.filter(i => i.status === historyFilter);
       renderHistory(items, document.getElementById('history-container'));
-    } catch (err) {
-      showToast(`❌ ${err.message}`, 'error');
-    }
+    } catch (err) { showToast(`❌ ${err.message}`, 'error'); }
   }
 
-  document.querySelectorAll('.history-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.history-tab').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      historyFilter = btn.dataset.filter;
-      loadHistory();
-    });
-  });
-
-  // ── Realtime Subscriptions ───────────────────────────────
-  supabase
-    .channel('inventory-changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'inventory' }, () => {
-      if (currentPage === 'inventory') loadInventory();
-    })
-    .subscribe();
-
-  supabase
-    .channel('shopping-changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'shopping_history' }, () => {
-      if (currentPage === 'shopping') loadShoppingList();
-      if (currentPage === 'history') loadHistory();
-    })
-    .subscribe();
-
-  // ── Init ─────────────────────────────────────────────────
+  // Init App
   async function init() {
     showLoading('กำลังเชื่อมต่อฐานข้อมูล...');
     const ok = await testConnection();
     if (!ok) {
       hideLoading();
-      showToast('❌ ไม่สามารถเชื่อมต่อ Supabase ได้ กรุณาตรวจสอบค่า API Key', 'error', 6000);
-      document.getElementById('inventory-grid').innerHTML = `
-        <div class="empty-state" style="grid-column:1/-1">
-          <span class="empty-icon">⚠️</span>
-          <p>ไม่สามารถเชื่อมต่อฐานข้อมูล</p>
-          <p class="sub">กรุณาตรวจสอบไฟล์ supabase-client.js</p>
-        </div>`;
+      showToast('❌ เชื่อมต่อฐานข้อมูลไม่ได้', 'error');
       return;
     }
     await loadInventory();
@@ -730,6 +449,5 @@
 
   init();
 </script>
-
 </body>
 </html>
