@@ -3,23 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#ffffff">
   <title>StockMate – จัดการสต๊อก</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 
   <script>
-    /**
-     * สำหรับ Vercel Deployment:
-     * ให้คุณนำค่าจาก Supabase Dashboard (Settings > API) มาใส่ที่นี่
-     * หรือหากต้องการความปลอดภัยสูงสุด ให้ใช้กระบวนการ Build Step 
-     * แต่สำหรับ Static Site แบบง่าย สามารถกำหนดค่าไว้ตรงนี้ได้ครับ
-     */
-    window.ENV_SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"; // แทนที่ด้วย Project URL ของคุณ
-    window.ENV_SUPABASE_ANON_KEY = "YOUR_ANON_PUBLIC_KEY"; // แทนที่ด้วย Anon Public Key ของคุณ
+    // ดึงค่าจาก Vercel Environment Variables 
+    // (ค่าเหล่านี้จะถูกฉีดเข้ามาเมื่อตั้งค่าในหน้า Vercel Dashboard)
+    window.ENV_SUPABASE_URL = "%%SUPABASE_URL%%"; 
+    window.ENV_SUPABASE_ANON_KEY = "%%SUPABASE_ANON_KEY%%";
   </script>
 </head>
 <body>
